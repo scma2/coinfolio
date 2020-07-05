@@ -1,0 +1,709 @@
+<!doctype html>
+<html lang="en">
+<head>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+<title>Coinfolio</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.1/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.16.0/bootstrap-table.min.css">
+
+<style>
+/* body */
+body {
+  min-height: 100vh;
+  background-color: #d9dbde;
+  background-image: linear-gradient(147deg, #d9dbde 0%, #6c757d 100%);
+}
+
+/* navbar */
+.navbar-nav .nav-link:hover {
+  background-color: rgba(255,255,255,.25);
+}
+
+/* fieldset */
+fieldset {
+  font-weight: 400;
+  font-size: 1rem;
+  line-height: 1.5;
+  border: 1px solid #6c757d;
+  border-radius: .25rem;
+}
+
+fieldset legend {
+  color: #fff;
+  font-weight: 400;
+  font-size: 1rem;
+  line-height: 1.5;
+  background-color: #6c757d;
+  border: 1px solid #6c757d;
+  border-radius: .25rem;
+  width: auto;
+}
+
+/* input[type="date"] & input[type="time"] */
+input[type="date"], input[type="time"] {
+  text-align: center;
+  appearance: none;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+}
+
+input[type="date"]:focus, input[type="time"]:focus {
+  box-shadow: none;
+}
+
+/* container */
+.container {
+  background-color: #fff;
+}
+
+/* lined tabs */
+.lined .nav-link {
+  color: rgba(33,37,41,.65);
+  opacity: 65;
+  border: none;
+  border-bottom: 3px solid transparent;
+}
+
+.lined .nav-link:hover {
+  border: none;
+  border-bottom: 3px solid transparent;
+}
+
+.lined .nav-link.active {
+  background: none;
+  color: #212529;
+  border-color: #6c757d;
+}
+
+
+/* search */
+.search > .form-control:focus {
+  border-color: gray;
+  box-shadow: 0 0 0 .2rem rgba(130,138,145,.25);
+}
+
+/* pagination */
+.pagination > li > a
+{
+    background-color: white;
+    color: gray;
+}
+
+.pagination > li > a:focus,
+.pagination > li > a:hover,
+.pagination > li > span:focus,
+.pagination > li > span:hover {
+  color: gray;
+  background-color: #eee;
+  border-color: #ddd;
+}
+
+.pagination > li > a:focus {
+  box-shadow: 0 0 0 .2rem rgba(130,138,145,.25);
+}
+
+.pagination > .active > a {
+  background-color: gray !important;
+  border-color: gray !important;
+}
+
+.pagination > .active > a:hover {
+  background-color: gray;
+  border-color: gray;
+}
+
+/* toast */
+.toast {
+  background-color: #fff;
+}
+
+/* https://stackoverflow.com/a/54767810 */
+#toast-container{position:sticky;z-index:1055;top:0}#toast-wrapper{position:absolute;top:0;right:0;margin:5px}#toast-container>#toast-wrapper>.toast{min-width:150px}#toast-container>#toast-wrapper>.toast>.toast-header strong{padding-right:20px}
+
+</style>
+
+</head>
+<body>
+<div class="modal fade" id="modalAbout" tabindex="-1" role="dialog" aria-labelledby="modalAbout" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">About</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modalAdd" tabindex="-1" role="dialog" aria-labelledby="modalAdd" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Add New Row</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-12 my-1">
+              <fieldset class="px-2">
+                <legend class="px-2">Date and Time</legend>
+                <div class="form-group row justify-content-around">
+                  <input type="date" id="add-date" class="form-control col-10 col-md-4 my-1">
+                  <input type="time" id="add-time" class="form-control col-10 col-md-4 my-1" step="1">
+                </div>
+              </fieldset>
+            </div>
+            <div class="col-md-4 my-1">
+              <fieldset class="px-2">
+                <legend class="px-2">Buy</legend>
+                <div class="form-group row">
+                  <label for="add-buy-amount" class="col-sm-5 col-form-label">Amount:</label>
+                  <input type="text" id="add-buy-amount" name="add-buy-amount" class="col-sm-6 my-1">
+                  <label for="add-buy-currency" class="col-sm-5 col-form-label">Currency:</label>
+                  <input type="text" id="add-buy-currency" name="add-buy-currency" class="col-sm-6 my-1">
+                </div>
+              </fieldset>
+            </div>
+            <div class="col-md-4 my-1">
+              <fieldset class="px-2">
+                <legend class="px-2">Sell</legend>
+                <div class="form-group row">
+                  <label for="add-sell-amount" class="col-sm-5 col-form-label">Amount:</label>
+                  <input type="text" id="add-sell-amount" name="add-sell-amount" class="col-sm-6 my-1">
+                  <label for="add-sell-currency" class="col-sm-5 col-form-label">Currency:</label>
+                  <input type="text" id="add-sell-currency" name="add-sell-currency" class="col-sm-6 my-1">
+                </div>
+              </fieldset>
+            </div>
+            <div class="col-md-4 my-1">
+              <fieldset class="px-2">
+                <legend class="px-2">Trading Fee</legend>
+                <div class="form-group row">
+                  <label for="add-fee-amount" class="col-sm-5 col-form-label">Amount:</label>
+                  <input type="text" id="add-fee-amount" name="add-fee-amount" class="col-sm-6 my-1">
+                  <label for="add-fee-currency" class="col-sm-5 col-form-label">Currency:</label>
+                  <input type="text" id="add-fee-currency" name="add-fee-currency" class="col-sm-6 my-1">
+                </div>
+              </fieldset>
+            </div>
+            <div class="col-md-12 my-1">
+              <fieldset class="px-2">
+                <legend class="px-2">Additional</legend>
+                <div class="form-group row">
+                  <label for="add-exchange" class="col-sm-5 col-form-label">Exchange:</label>
+                  <input type="text" id="add-exchange" name="add-exchange" class="col-sm-6 my-1">
+                  <label for="add-comment" class="col-sm-5 col-form-label">Comment:</label>
+                  <input type="text" id="add-comment" name="add-comment" class="col-sm-6 my-1">
+                </div>
+              </fieldset>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
+        <button id="add-button" type="button" class="btn btn-success">Add Row</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modalEdit" tabindex="-1" role="dialog" aria-labelledby="modalEdit" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Update Row</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-12 my-1">
+              <fieldset class="px-2">
+                <legend class="px-2">Date and Time</legend>
+                <div class="form-group row justify-content-around">
+                  <input type="date" id="edit-date" class="form-control col-10 col-md-4 my-1">
+                  <input type="time" id="edit-time" class="form-control col-10 col-md-4 my-1" step="1">
+                </div>
+              </fieldset>
+            </div>
+            <div class="col-md-4 my-1">
+              <fieldset class="px-2">
+                <legend class="px-2">Buy</legend>
+                <div class="form-group row">
+                  <label for="edit-buy-amount" class="col-sm-5 col-form-label">Amount:</label>
+                  <input type="text" id="edit-buy-amount" name="edit-buy-amount" class="col-sm-6 my-1">
+                  <label for="edit-buy-currency" class="col-sm-5 col-form-label">Currency:</label>
+                  <input type="text" id="edit-buy-currency" name="edit-buy-currency" class="col-sm-6 my-1">
+                </div>
+              </fieldset>
+            </div>
+            <div class="col-md-4 my-1">
+              <fieldset class="px-2">
+                <legend class="px-2">Sell</legend>
+                <div class="form-group row">
+                  <label for="edit-sell-amount" class="col-sm-5 col-form-label">Amount:</label>
+                  <input type="text" id="edit-sell-amount" name="edit-sell-amount" class="col-sm-6 my-1">
+                  <label for="edit-sell-currency" class="col-sm-5 col-form-label">Currency:</label>
+                  <input type="text" id="edit-sell-currency" name="edit-sell-currency" class="col-sm-6 my-1">
+                </div>
+              </fieldset>
+            </div>
+            <div class="col-md-4 my-1">
+              <fieldset class="px-2">
+                <legend class="px-2">Trading Fee</legend>
+                <div class="form-group row">
+                  <label for="edit-fee-amount" class="col-sm-5 col-form-label">Amount:</label>
+                  <input type="text" id="edit-fee-amount" name="edit-fee-amount" class="col-sm-6 my-1">
+                  <label for="edit-fee-currency" class="col-sm-5 col-form-label">Currency:</label>
+                  <input type="text" id="edit-fee-currency" name="edit-fee-currency" class="col-sm-6 my-1">
+                </div>
+              </fieldset>
+            </div>
+            <div class="col-md-12 my-1">
+              <fieldset class="px-2">
+                <legend class="px-2">Additional</legend>
+                <div class="form-group row">
+                  <label for="edit-exchange" class="col-sm-5 col-form-label">Exchange:</label>
+                  <input type="text" id="edit-exchange" name="edit-exchange" class="col-sm-6 my-1">
+                  <label for="edit-comment" class="col-sm-5 col-form-label">Comment:</label>
+                  <input type="text" id="edit-comment" name="edit-comment" class="col-sm-6 my-1">
+                </div>
+              </fieldset>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
+        <button id="edit-button" type="button" class="btn btn-success">Update Row</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modalDuplicate" tabindex="-1" role="dialog" aria-labelledby="modalDuplicate" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Duplicate Selected Row</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Are you sure you want to duplicate selected row?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
+        <button id="duplicate-button" type="button" class="btn btn-success">Confirm</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modalRemove" tabindex="-1" role="dialog" aria-labelledby="modalRemove" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Delete Selected Row</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Are you sure you want to delete selected row?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
+        <button id="remove-button" type="button" class="btn btn-success">Confirm</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modalImport" tabindex="-1" role="dialog" aria-labelledby="modalImport" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Import Table</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        form here
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-success">Import</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modalExport" tabindex="-1" role="dialog" aria-labelledby="modalExport" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Export Table</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        form here
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-success">Export</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modalSettings" tabindex="-1" role="dialog" aria-labelledby="modalSettings" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Settings</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      
+        <div class="container">
+          <div class="row">
+            <div class="col text-center">
+              <button type="button" class="btn btn-outline-secondary btn-sm">Table view: Extended</button><br>
+              <button type="button" class="btn btn-outline-secondary btn-sm mt-2">Inline Editing: Off</button><br>
+              <button type="button" class="btn btn-outline-secondary btn-sm mt-2">Autocomplete: Off</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="navbar navbar-expand-sm navbar-dark bg-dark py-0">
+  <a class="navbar-brand font-weight-bold" href="#">
+    <i class="fas fa-wallet"></i>
+    Coinfolio
+  </a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav ml-auto">
+      <li class="nav-item">
+        <a class="nav-link px-4 py-3" href="#" data-toggle="modal" data-target="#modalAbout">About</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<div class="container my-5 pt-2 pb-4">
+  <div class="row">
+    <div class="col">
+
+      <ul id="tab" role="tablist" class="nav nav-tabs nav-pills with-arrow lined flex-column flex-sm-row text-center">
+        <li class="nav-item flex-sm-fill">
+          <a id="tab-coin-overview" data-toggle="tab" href="#coin-overview" role="tab" aria-controls="coin-overview" aria-selected="true" class="nav-link text-uppercase font-weight-bold mr-sm-3 rounded-0 active">Coin Overview</a>
+        </li>
+        <li class="nav-item flex-sm-fill">
+          <a id="tab-tax-report" data-toggle="tab" href="#tax-report" role="tab" aria-controls="tax-report" aria-selected="false" class="nav-link text-uppercase font-weight-bold mr-sm-3 rounded-0">Tax Report</a>
+        </li>
+      </ul>
+      <div id="tabContent" class="tab-content pt-5">
+        <div id="coin-overview" role="tabpanel" aria-labelledby="tab-coin-overview" class="tab-pane fade show active">
+          <div id="toolbar">
+            <div class="btn-group" role="group" aria-label="Actions">
+              <button id="new" class="btn btn-secondary" data-toggle="modal" data-target="#modalAdd">New</button>
+              <button id="edit" class="btn btn-secondary" data-toggle="modal" data-target="#modalEdit" disabled>Edit</button>
+              <button id="duplicate" class="btn btn-secondary" data-toggle="modal" data-target="#modalDuplicate" disabled>Duplicate</button>
+              <button id="remove" class="btn btn-secondary" data-toggle="modal" data-target="#modalRemove" disabled>Delete</button>
+            </div>
+          <div class="btn-group" role="group" aria-label="Import / Export">
+            <button id="import" class="btn btn-secondary" data-toggle="modal" data-target="#modalImport">Import</button>
+            <button id="export" class="btn btn-secondary" data-toggle="modal" data-target="#modalExport">Export</button>
+          </div>
+          <button id="button" class="btn btn-secondary" data-toggle="modal" data-target="#modalSettings">
+            <i class="fas fa-cog"></i>
+          </button>
+          </div>
+          <table
+            id="table"
+            data-toolbar="#toolbar"
+            data-classes="table table-hover table-sm"
+            data-thead-classes="thead-light"
+            data-sort-name="timestamp"
+            data-sort-order="asc"
+            data-single-select="true"
+            data-click-to-select="true"
+            data-search="true"
+            data-search-on-enter-key="true"
+            data-pagination="true"
+            data-maintain-meta-data="true">
+            <thead>
+              <tr>
+                <th data-field="state" data-checkbox="true"></th>
+                <th data-field="type" data-sortable="true">Type</th>
+                <th data-field="buy" data-sortable="true">Buy</th>
+                <th data-field="buy-currency" data-sortable="true">Cur.</th>
+                <th data-field="sell" data-sortable="true">Sell</th>
+                <th data-field="sell-currency" data-sortable="true">Cur.</th>
+                <th data-field="fee" data-sortable="true">Fee</th>
+                <th data-field="fee-currency" data-sortable="true">Cur.</th>
+                <th data-field="exchange" data-sortable="true">Exchange</th>
+                <th data-field="comment" data-sortable="true">Comment</th>
+                <th data-field="timestamp" data-sortable="true" data-formatter="tableTimestampFormatter">Date</th>
+              </tr>
+            </thead>
+          </table>
+        </div>
+        
+        <div id="tax-report" role="tabpanel" aria-labelledby="tab-tax-report" class="tab-pane fade">
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.16.0/bootstrap-table.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.27.0/moment.min.js"></script>
+
+
+<script>
+  $(function() {
+    var table = $('#table');
+    //var $new = $('#new');
+    var edit = $('#edit');
+    var duplicate = $('#duplicate');
+    var remove = $('#remove');
+    
+    var data = getRandomDataSet();
+    
+    table.bootstrapTable({data: data});
+    
+    // table toggle display on some buttons
+    table.on('check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs.table', function () {
+      edit.prop('disabled', table.bootstrapTable('getSelections').length != 1 );
+      duplicate.prop('disabled', table.bootstrapTable('getSelections').length != 1 );
+      remove.prop('disabled', table.bootstrapTable('getSelections').length != 1 );
+    });
+    
+    edit.on('click', function(event) {
+      var row = table.bootstrapTable('getSelections')[0];
+      $("#edit-buy-amount").val(row['buy']);
+      $("#edit-buy-currency"). val(row['buy-currency']);
+      $("#edit-sell-amount").val(row['sell']);
+      $("#edit-sell-currency").val(row['sell-currency']);
+      $("#edit-fee-amount").val(row['fee']);
+      $("#edit-fee-currency").val(row['fee-currency']);
+      $("#edit-exchange").val(row['exchange']);
+      $("#edit-comment").val(row['comment']);
+      $("#edit-date").val(moment.unix(row['timestamp']).format('YYYY-MM-DD'));
+      $("#edit-time").val(moment.unix(row['timestamp']).format('HH:mm:ss'));
+    });
+    
+    // add row
+    $('#add-button').on('click', function(event) {
+      var add = [];
+      var type = "Trade";
+      var buy = $("#add-buy-amount").val();
+      var buyCurrency = $("#add-buy-currency"). val();
+      var sell = $("#add-sell-amount").val();
+      var sellCurrency = $("#add-sell-currency").val();
+      var fee = $("#add-fee-amount").val();
+      var feeCurrency = $("#add-fee-currency").val();
+      var exchange = $("#add-exchange").val();
+      var comment = $("#add-comment").val();
+      var timestamp = moment($("#add-date").val() + " " + $("#add-time").val(), "YYYY-MM-DD HH:mm:ss").unix();
+      add.push({
+        'type': type,
+        'buy': buy,
+        'buy-currency': buyCurrency,
+        'sell': sell,
+        'sell-currency': sellCurrency,
+        'fee': fee,
+        'fee-currency': feeCurrency,
+        'exchange': exchange,
+        'comment': comment,
+        'timestamp': timestamp
+      });
+      table.bootstrapTable('append', add);
+      $('#modalAdd').modal('hide');
+      createToast("success", "SUCCESS", "", "Row successfully added.", 5000);
+    });
+    
+    // edit row
+    $('#edit-button').on('click', function(event) {
+      var id;
+      $('input[name="btSelectItem"]:checked').each(function () {
+        id = $(this).data('index');
+      });
+      var type = "Trade";
+      var buy = $("#edit-buy-amount").val();
+      var buyCurrency = $("#edit-buy-currency"). val();
+      var sell = $("#edit-sell-amount").val();
+      var sellCurrency = $("#edit-sell-currency").val();
+      var fee = $("#edit-fee-amount").val();
+      var feeCurrency = $("#edit-fee-currency").val();
+      var exchange = $("#edit-exchange").val();
+      var comment = $("#edit-comment").val();
+      var timestamp = moment($("#edit-date").val() + " " + $("#edit-time").val(), "YYYY-MM-DD HH:mm:ss").unix();
+      var edit = {
+        'type': type,
+        'buy': buy,
+        'buy-currency': buyCurrency,
+        'sell': sell,
+        'sell-currency': sellCurrency,
+        'fee': fee,
+        'fee-currency': feeCurrency,
+        'exchange': exchange,
+        'comment': comment,
+        'timestamp': timestamp
+      };
+      table.bootstrapTable('updateRow', {index: id, row: edit});
+      $('#modalEdit').modal('hide');
+      createToast("success", "SUCCESS", "", "Row successfully edited.", 5000);
+    });
+    
+    // duplicate row
+    $('#duplicate-button').on('click', function(event) {
+      var duplicate = table.bootstrapTable('getSelections');
+      table.bootstrapTable('append', duplicate);
+      $('#modalDuplicate').modal('hide');
+      createToast("success", "SUCCESS", "", "Row successfully duplicated.", 5000);
+    });
+    
+    // remove row
+    // needs https://github.com/wenzhixin/bootstrap-table/pull/4909
+    $('#remove-button').on('click', function(event) {
+      var values = [];
+      $('input[name="btSelectItem"]:checked').each(function () {
+        values.push($(this).data('index'));
+      });
+      console.log(values);
+      table.bootstrapTable('remove', {field: '$index', values: [1]});
+      $('#modalRemove').modal('hide');
+      createToast("success", "SUCCESS", "", "Row successfully removed.", 5000);
+    });
+});
+
+function tableTimestampFormatter(value, row, index) {
+  return moment.unix(value).format('YYYY-MM-DD HH:mm:ss');
+}
+
+function getRandomDataSet() {
+  var data = [];
+  for (i = 0; i < 100; i++) {
+    data.push(getRandomRow());
+  }
+  return data;
+}
+
+function getRandomRow() {
+  var type = getRandomType();
+  var buy = getRandomAmount(0.1, 5000);
+  var buyCurrency = getRandomCurrency();
+  var sell = getRandomAmount(0.0001, 100);
+  var sellCurrency = getRandomCurrency();
+  var fee = getRandomAmount(0.001, 10);
+  var feeCurrency = getRandomCurrency();
+  var exchange = getRandomExchange();
+  var comment = "";
+  var timestamp = getRandomTimestamp(moment("2012-01-01", "YYYY-MM-DD").unix(), moment().unix());
+  return {
+    'type': type,
+    'buy': buy,
+    'buy-currency': buyCurrency,
+    'sell': sell,
+    'sell-currency': sellCurrency,
+    'fee': fee,
+    'fee-currency': feeCurrency,
+    'exchange': exchange,
+    'comment': comment,
+    'timestamp': timestamp
+  };
+}
+
+function getRandomType() {
+  var types = ['Trade', 'Deposit', 'Withdraw'];
+  return types[Math.floor(Math.random() * types.length)];
+}
+
+function getRandomAmount(min, max) {
+  return (Math.random() * (max - min) + min).toFixed(8);
+}
+
+function getRandomCurrency() {
+  var currencies = ['BTC', 'ETH', 'USDT', 'XRP', 'BCH', 'BSV', 'LTC', 'BNB', 'EOS', 'ADA', 'XTZ', 'CRO', 'XLM', 'LINK', 'LEO', 'XMR', 'TRX', 'HT', 'NEO', 'ETC'];
+  return currencies[Math.floor(Math.random() * currencies.length)];
+}
+
+function getRandomExchange() {
+  var exchanges = ['Binance', 'Coinbase Pro', 'Kraken', 'Bitfinex', 'Bitstamp', 'Huobi Global', 'Bittrex', 'Gemini'];
+  return exchanges[Math.floor(Math.random() * exchanges.length)];
+}
+
+function getRandomTimestamp(start, end) {
+  return getRandomInt(start, end);
+}
+  
+function getRandomInt(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+/* ['info', 'warning', 'success', 'error']  */
+function createToast(type, title, subtitle, content, delay) {
+  $.toast({
+    title: title,
+    subtitle: subtitle,
+    content: content,
+    type: type,
+    delay: delay
+  });
+
+}
+
+/* https://stackoverflow.com/a/54767810 */
+(function(b){b.toast=function(a,h,g,l,k){b("#toast-container").length||(b("body").prepend('<div id="toast-container" aria-live="polite" aria-atomic="true"></div>'),b("#toast-container").append('<div id="toast-wrapper"></div>'));var c="",d="",e="text-muted",f="",m="object"===typeof a?a.title||"":a||"Notice!";h="object"===typeof a?a.subtitle||"":h||"";g="object"===typeof a?a.content||"":g||"";k="object"===typeof a?a.delay||3E3:k||3E3;switch("object"===typeof a?a.type||"":l||"info"){case "info":c="bg-info";
+f=e=d="text-white";break;case "success":c="bg-success";f=e=d="text-white";break;case "warning":case "warn":c="bg-warning";f=e=d="text-white";break;case "error":case "danger":c="bg-danger",f=e=d="text-white"}a='<div class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-delay="'+k+'">'+('<div class="toast-header '+c+" "+d+'">')+('<strong class="mr-auto">'+m+"</strong>");a+='<small class="'+e+'">'+h+"</small>";a+='<button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">';
+a+='<span aria-hidden="true" class="'+f+'">&times;</span>';a+="</button>";a+="</div>";""!==g&&(a+='<div class="toast-body">',a+=g,a+="</div>");a+="</div>";b("#toast-wrapper").append(a);b("#toast-wrapper .toast:last").toast("show")}})(jQuery);
+
+</script>
+
+</body>
+</html>
