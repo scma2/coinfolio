@@ -340,6 +340,46 @@ input[type="date"]:focus, input[type="time"]:focus {
   </div>
 </div>
 
+<div class="modal fade" id="modalOpen" tabindex="-1" role="dialog" aria-labelledby="modalOpen" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Open File</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        form here
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-success">Export</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modalSave" tabindex="-1" role="dialog" aria-labelledby="modalSave" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Save File</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        form here
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-success">Import</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="modal fade" id="modalImport" tabindex="-1" role="dialog" aria-labelledby="modalImport" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
@@ -380,34 +420,6 @@ input[type="date"]:focus, input[type="time"]:focus {
   </div>
 </div>
 
-<div class="modal fade" id="modalSettings" tabindex="-1" role="dialog" aria-labelledby="modalSettings" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Settings</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-      
-        <div class="container">
-          <div class="row">
-            <div class="col text-center">
-              <button type="button" class="btn btn-outline-secondary btn-sm">Table view: Extended</button><br>
-              <button type="button" class="btn btn-outline-secondary btn-sm mt-2">Inline Editing: Off</button><br>
-              <button type="button" class="btn btn-outline-secondary btn-sm mt-2">Autocomplete: Off</button>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
-      </div>
-    </div>
-  </div>
-</div>
-
 
 
 <nav class="navbar navbar-expand-sm navbar-dark bg-dark py-0">
@@ -436,25 +448,50 @@ input[type="date"]:focus, input[type="time"]:focus {
           <a id="tab-coin-overview" data-toggle="tab" href="#coin-overview" role="tab" aria-controls="coin-overview" aria-selected="true" class="nav-link text-uppercase font-weight-bold mr-sm-3 rounded-0 active">Coin Overview</a>
         </li>
         <li class="nav-item flex-sm-fill">
-          <a id="tab-tax-report" data-toggle="tab" href="#tax-report" role="tab" aria-controls="tax-report" aria-selected="false" class="nav-link text-uppercase font-weight-bold mr-sm-3 rounded-0">Tax Report</a>
+          <a id="tab-tax-report" data-toggle="tab" href="#tax-report" role="tab" aria-controls="tax-report" aria-selected="false" class="nav-link text-uppercase font-weight-bold mr-sm-3 rounded-0">Tax Overview</a>
         </li>
       </ul>
       <div id="tabContent" class="tab-content pt-5">
         <div id="coin-overview" role="tabpanel" aria-labelledby="tab-coin-overview" class="tab-pane fade show active">
           <div id="toolbar">
             <div class="btn-group" role="group" aria-label="Actions">
-              <button id="new" class="btn btn-secondary" data-toggle="modal" data-target="#modalAdd">New</button>
-              <button id="edit" class="btn btn-secondary" data-toggle="modal" data-target="#modalEdit" disabled>Edit</button>
-              <button id="duplicate" class="btn btn-secondary" data-toggle="modal" data-target="#modalDuplicate" disabled>Duplicate</button>
-              <button id="remove" class="btn btn-secondary" data-toggle="modal" data-target="#modalRemove" disabled>Delete</button>
+              <button id="new" class="btn btn-secondary" data-toggle="modal" data-target="#modalAdd" data-tooltip="tooltip" data-placement="top" title="Add">
+                <i class="fas fa-plus-circle"></i>
+              </button>
+              <button id="edit" class="btn btn-secondary" data-toggle="modal" data-target="#modalEdit" data-tooltip="tooltip" data-placement="top" title="Edit" disabled>
+                <i class="fas fa-edit"></i>
+              </button>
+              <button id="duplicate" class="btn btn-secondary" data-toggle="modal" data-target="#modalDuplicate" data-tooltip="tooltip" data-placement="top" title="Duplicate" disabled>
+                <i class="fas fa-copy"></i>
+              </button>
+              <button id="remove" class="btn btn-secondary" data-toggle="modal" data-target="#modalRemove" data-tooltip="tooltip" data-placement="top" title="Delete" disabled>
+                <i class="fas fa-trash-alt"></i>
+              </button>
             </div>
-          <div class="btn-group" role="group" aria-label="Import / Export">
-            <button id="import" class="btn btn-secondary" data-toggle="modal" data-target="#modalImport">Import</button>
-            <button id="export" class="btn btn-secondary" data-toggle="modal" data-target="#modalExport">Export</button>
-          </div>
-          <button id="button" class="btn btn-secondary" data-toggle="modal" data-target="#modalSettings">
-            <i class="fas fa-cog"></i>
-          </button>
+            <div class="btn-group" role="group" aria-label="Undo / Redo">
+              <button id="import" class="btn btn-secondary" data-tooltip="tooltip" data-placement="top" title="Undo" disabled>
+                <i class="fas fa-undo"></i>
+              </button>
+              <button id="export" class="btn btn-secondary" data-tooltip="tooltip" data-placement="top" title="Redo" disabled>
+                <i class="fas fa-redo"></i>
+              </button>
+            </div>
+            <div class="btn-group" role="group" aria-label="Load / Save">
+              <button id="import" class="btn btn-secondary" data-toggle="modal" data-target="#modalOpen" data-tooltip="tooltip" data-placement="top" title="Open">
+                <i class="fas fa-folder-open"></i>
+              </button>
+              <button id="export" class="btn btn-secondary" data-toggle="modal" data-target="#modalSave" data-tooltip="tooltip" data-placement="top" title="Save">
+                <i class="fas fa-save"></i>
+              </button>
+            </div>
+            <div class="btn-group" role="group" aria-label="Import / Export">
+              <button id="import" class="btn btn-secondary" data-toggle="modal" data-target="#modalImport" data-tooltip="tooltip" data-placement="top" title="Import">
+                <i class="fas fa-file-import"></i>
+              </button>
+              <button id="export" class="btn btn-secondary" data-toggle="modal" data-target="#modalExport" data-tooltip="tooltip" data-placement="top" title="Export">
+                <i class="fas fa-file-export"></i>
+              </button>
+            </div>
           </div>
           <table
             id="table"
@@ -513,6 +550,12 @@ input[type="date"]:focus, input[type="time"]:focus {
     var data = getRandomDataSet();
     
     table.bootstrapTable({data: data});
+    
+    // initialize tooptips
+    $('[data-tooltip="tooltip"]').tooltip({
+      container: 'body',
+      offset: '0, 2'
+    });
     
     // table toggle display on some buttons
     table.on('check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs.table', function () {
